@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "nbtag-exporter"
-version = "0.2.0"
+version = "0.2.1"
 description = "Export selected tagged cells from a Jupyter notebook to .py with a single call"
 readme = "README.md"
 requires-python = ">=3.8"
