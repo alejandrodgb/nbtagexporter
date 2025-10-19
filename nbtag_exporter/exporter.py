@@ -63,6 +63,10 @@ class TagPythonExporter(PythonExporter):
       - else if exclude_tags is set: drops cells having any of those tags
       - else: passes through all cells
     """
+
+    def __init__(self, **kwargs):
+        super().__init__(template_name="python/plain", **kwargs)
+
     include_tags = TList(Unicode(), help="Tags to include").tag(config=True)
     exclude_tags = TList(Unicode(), help="Tags to exclude").tag(config=True)
 
