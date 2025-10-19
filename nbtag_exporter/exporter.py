@@ -51,6 +51,7 @@ from pathlib import Path
 from typing import Iterable, Literal, Sequence
 
 from traitlets import List as TList, Unicode, default
+from traitlets.config import Config
 from nbconvert.exporters import PythonExporter
 from nbformat import read as nb_read
 from nbformat.notebooknode import NotebookNode
@@ -65,7 +66,14 @@ class TagPythonExporter(PythonExporter):
     """
 
     def __init__(self, **kwargs):
-        super().__init__(template_name="python/plain", **kwargs)
+        # Use standard python template
+        kwargs.setdefault("template_name", "python")
+
+        # Ensure input prompts are ignored
+        cfg = kwargs.pop("config", None) or Config()
+        cfg.TemplateExporter.exclude_input_prompt = True
+
+        super().__init__(config=cfg, **kwargs)
 
     include_tags = TList(Unicode(), help="Tags to include").tag(config=True)
     exclude_tags = TList(Unicode(), help="Tags to exclude").tag(config=True)
