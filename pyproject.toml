@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nbtag-exporter"
+version = "0.2.0"
+description = "Export selected tagged cells from a Jupyter notebook to .py with a single call"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+  "nbconvert>=7.0",
+  "nbformat>=5.7",
+  "traitlets>=5.0",
+  # optional helper to auto-detect current notebook path
+  "ipynbname>=2023.2.0; extra == 'auto'"
+]
+
+[project.optional-dependencies]
+auto = ["ipynbname>=2023.2.0"]
+
+[project.entry-points."nbconvert.exporters"]
+tagpy = "nbtag_exporter.exporter:TagPythonExporter"
