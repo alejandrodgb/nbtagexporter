@@ -31,7 +31,7 @@ Result → a Python file containing only those tagged cells.
 ## Installation
 
 ```bash
-pip install nbtag-exporter
+pip install "git+https://github.com/alejandrodgb/nbtagexporter.git@main"
 ```
 
 ---
