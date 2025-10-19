@@ -2,56 +2,47 @@
 exporter.py
 ===========
 
-Implements the core logic for the ``nbtag_exporter`` package.
+Export selected (tagged) cells from a Jupyter notebook to a Python script.
 
-This module provides:
+This module exposes a single public API:
 
-1. **TagPythonExporter**
-   A subclass of :class:`nbconvert.exporters.PythonExporter` that filters Jupyter
-   notebook cells based on their metadata tags. It can include or exclude cells
-   depending on configuration, enabling selective export of code or markdown
-   content.
+- ``export_tagged(output, tags, notebook)``:
+  Write a ``.py`` file that contains only the cells from the given notebook whose
+  metadata includes **any** of the specified tags.
 
-2. **export_tagged()**
-   A high-level utility function designed for direct use within Jupyter notebooks.
-   It automatically reads a notebook (either the current one or a specified file),
-   applies tag-based filtering using ``TagPythonExporter``, and writes the result
-   to a clean Python script.
+Current scope
+-------------
+- **Include-by-tag only**: cells are kept if they contain any tag in ``tags``.
+- **Explicit notebook path required**: pass the path via ``notebook=...``.
+- **Plain Python output**: execution state and outputs are not included.
+
+Not in scope
+------------
+- Excluding cells by tag
+- Command-line / nbconvert entry points
+- Automatic detection of the current notebook path
 
 Example
 -------
-Exporting selected cells from a notebook:
-
     from nbtag_exporter import export_tagged
 
-    # Export all cells tagged "export" into a standalone script
-    export_tagged(output="selected_cells.py", tags=["export"])
-
-Or through the nbconvert CLI:
-
-    jupyter nbconvert --to tagpy --TagPythonExporter.include_tags='["export"]' notebook.ipynb
-
-Functions
----------
-export_tagged(output, tags, notebook=None)
-    Export only cells that contain specified tags to a .py file.
-
-Classes
--------
-TagPythonExporter
-    Extends nbconvert.PythonExporter to include or exclude notebook cells by tag.
+    # Keep only cells tagged "export" from MyNotebook.ipynb
+    export_tagged(
+        output="selected_cells.py",
+        tags=["export"],
+        notebook="MyNotebook.ipynb",
+    )
 
 Notes
 -----
-- ``TagPythonExporter`` can be registered as a custom nbconvert exporter
-  via entry points under ``[project.entry-points."nbconvert.exporters"]``.
-- The helper ``export_tagged()`` optionally uses ``ipynbname`` to detect
-  the current notebook path.
-- All exports are plain Python text — outputs and execution state are stripped.
+- If the source notebook uses IPython magics (e.g., ``%time``, ``!cmd``), nbconvert
+  may warn that IPython is not installed. Install it to enable syntax transformation:
+
+      pip install ipython
 
 License
 -------
-MIT License — free to use, modify, and distribute with no warranty or liability.
+MIT License — provided “as is,” without warranty or liability.
 """
 
 

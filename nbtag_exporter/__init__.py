@@ -3,32 +3,48 @@
 nbtag_exporter
 ==============
 
-A lightweight extension for Jupyter notebooks that integrates with nbconvert to 
-export only selected, tagged cells into clean Python scripts.
+Export selected (tagged) cells from a Jupyter notebook to a Python script.
 
-This package provides two main components:
-- `TagPythonExporter`: a subclass of `nbconvert.PythonExporter` that filters notebook
-  cells based on include/exclude tags.
-- `export_tagged()`: a convenience function callable from within any Jupyter notebook
-  to export specific tagged cells directly to a `.py` file with one command.
+Public API
+----------
+export_tagged(output, tags, notebook)
+    Write a ``.py`` file that contains only the cells from the given notebook
+    whose metadata includes **any** of the specified tags.
+
+Current scope
+-------------
+- **Include-by-tag only**: cells are kept if they contain any tag in ``tags``.
+- **Explicit notebook path required**: pass the path via ``notebook=...``.
+- **Plain Python output**: execution state and outputs are not included.
+
+Not in scope
+------------
+- Excluding cells by tag
+- Command-line / nbconvert entry points
+- Automatic detection of the current notebook path
 
 Example
 -------
-In a notebook:
-
     from nbtag_exporter import export_tagged
 
-    # Export all cells tagged 'export' to selected_cells.py
-    export_tagged(output="selected_cells.py", tags=["export"])
+    export_tagged(
+        output="selected_cells.py",
+        tags=["export"],
+        notebook="MyNotebook.ipynb",
+    )
 
-The exporter can also be used through the nbconvert CLI:
+Notes
+-----
+- If the source notebook uses IPython magics (e.g., ``%time``, ``!cmd``), nbconvert
+  may warn that IPython is not installed. Install it to enable syntax transformation:
 
-    jupyter nbconvert --to tagpy --TagPythonExporter.include_tags='["export"]' notebook.ipynb
+      pip install ipython
 
 License
 -------
-MIT License — free to use, modify, and distribute with no warranty or liability.
+MIT License — provided “as is,” without warranty or liability.
 """
+
 
 from .exporter import export_tagged, TagPythonExporter
 
